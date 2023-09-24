@@ -235,7 +235,7 @@ main{
   left: 0;
 }
 
-.modal {
+.player-form {
   box-shadow: 0 0px 20px rgba(253, 253, 253, 0.286);
   border-radius: 25px;
   background-image: radial-gradient(ellipse at top left, #4b5da5, #383f60);

@@ -1,11 +1,9 @@
 import { useState, useContext } from "react";
 import { SelPlayerCtx, SettingsCtx } from "../utility/Context";
 
-function AuctionDisplay({goPrev, goNext, openModal, selPlayer}) {
+function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, playersLength}) {
   const noCampUrl =
     "https://content.fantacalcio.it/web/campioncini/card2021/NO-CAMPIONCINO.png?v=35";
-
-  const [error, setError] = useState(false);
 
   const [settings, setSettings] = useContext(SettingsCtx);
 
@@ -13,12 +11,15 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer}) {
     <>
       <div className="auction-cont">
         <button onClick={goPrev}>left</button>
-        {/* <div>{selPlayer.id}</div> */}
-        <div>{selPlayer.sortId + 1}</div>
+        {/* <div>{selPlayer.sortId + 1}</div> */} {/* useful for debugging */}
+        <div>{progressIndex+1}/{playersLength}</div>
         <img
-          src={error ? noCampUrl : selPlayer.urlCampioncino}
+          src= {selPlayer.urlCampioncino}
           alt="Campioncino"
-          onError={() => setError(true)}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src=noCampUrl;
+          }}
           className="campioncino"
         />
         <div>{selPlayer.giocatore}</div>

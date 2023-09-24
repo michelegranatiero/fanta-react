@@ -64,7 +64,7 @@ const Draft = () => {
     setCurrIndex(idx);
   }
 
-  function removePlayer(playerId) {
+  function removePlayerFromAuction(playerId) {
     let idx = currIndex;
     const newPlayers = players.filter((player) => player.id !== playerId);
     if (idx >= newPlayers.length) {
@@ -85,17 +85,52 @@ const Draft = () => {
   }
 
   /* Assegnamento Giocatore da Modal*/
-  function pushPlayerIntoTeam(e, teamId, cost){
+  function pushPlayerValidation(teamId, cost) {
+    if(cost<1){
+      alert('il costo del giocatore non può essere inferiore a 1')
+    }else if(cost > teams[teamId-1].maxOffer){
+      alert('Il costo del giocatore supera la massima offerta che la squadra selezionata può presentare')
+    }else if(teams[teamId-1].players.length >= teams[teamId-1].numPlayers){
+      alert('La squadra selezionata è al completo')
+    }else{
+      /* if all ok */
+      pushPlayerIntoTeam(teamId, cost)
+    }
+  }
+
+  function pushPlayerIntoTeam(teamId, cost){
     const newPlayer = {...selPlayer, "cost" : cost};
     const idx = teamId - 1;
     const oldTeamPlayers = teams[idx].players;
+    /* slice for UPDATING */
     const newTeams = [...teams.slice(0, idx), {...teams[idx], "players": [...oldTeamPlayers, newPlayer]}, ...teams.slice(idx + 1)]
     setTeams(newTeams);
     /* remove player from players list*/
-    removePlayer(selPlayer.id)
+    removePlayerFromAuction(selPlayer.id)
     /* eventually add player to history */
     ModalToggleHandlder();
   }
+
+  function pushBackPlayerIntoAuction(player){
+    let newPlayers = players;
+    /* newPlayers.push(player); */
+
+    let idx = players.length;
+    for (let i=0; i < players.length; i+=1) {
+      if (players[i].sortId > player.sortId) {
+        idx = i;
+        break;
+      }
+    }
+    /* slice for INSERTING */
+    newPlayers = [...newPlayers.slice(0,idx), player, ...newPlayers.slice(idx)]
+    setPlayers(newPlayers);
+    /* adjust auction index */
+    let idx2 = currIndex + 1;
+    setCurrIndex(idx2)
+    setSelPlayer(newPlayers[idx2])
+  }
+
 
   return (
     <>
@@ -106,16 +141,19 @@ const Draft = () => {
           goNext={goNextPlayer}
           openModal={ModalToggleHandlder}
           selPlayer={selPlayer}
+          progressIndex={players.findIndex((elem) => elem === selPlayer)}
+          playersLength = {players.length}
+          
         />
       )}
       {players && (
         <div className="teams-cont">
           {teams.map((team) => (
-            <Team key={team.id} id={team.id} team={team}/>
+            <Team key={team.id} id={team.id} team={team} pushBackPlayer={pushBackPlayerIntoAuction}/>
           ))}
         </div>
       )}
-      {modalToggle && <Modal onCancel={ModalToggleHandlder} onSubmit={pushPlayerIntoTeam} selPlayer={selPlayer} mode={settings.mode} />}
+      {modalToggle && <Modal onCancel={ModalToggleHandlder} onSubmitHandler={pushPlayerValidation} selPlayer={selPlayer} mode={settings.mode} />}
       {modalToggle && <Backdrop onClick={ModalToggleHandlder} />}
     </>
   );

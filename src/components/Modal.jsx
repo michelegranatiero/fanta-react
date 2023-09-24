@@ -1,7 +1,7 @@
 import { useState, useContext, useRef } from "react";
 import { TeamsCtx } from "../utility/Context";
 
-function Modal({ onCancel, onSubmit, selPlayer, mode }) {
+function Modal({ onCancel, onSubmitHandler, selPlayer, mode }) {
 
   const [teams] = useContext(TeamsCtx)
 
@@ -10,9 +10,21 @@ function Modal({ onCancel, onSubmit, selPlayer, mode }) {
 
   const inputRef  = useRef()
 
+  const regex = /^[1-9][0-9]*$/;
+
+  function costInputHandler(e){
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setCost(e.target.value);
+    }
+  }
+  
+  function submitForm(e){
+    e.preventDefault();
+    onSubmitHandler(selTeamId,cost);
+  }
 
   return (
-    <div className="modal">
+    <form id="player-form" onSubmit={submitForm} className="player-form">
       <div className="modal-info">
         {mode === "classic" ? (
           <>
@@ -34,17 +46,17 @@ function Modal({ onCancel, onSubmit, selPlayer, mode }) {
              <option key={team.id} value={team.id}>{team.name}</option>
           ))}
         </select>
-        <input ref={inputRef} type="number" id="cost" name="cost" value={cost} min={1} onChange={(e) => setCost(e.target.value)}/>
+        <input ref={inputRef} type="number" id="cost" name="cost" value={cost} autoFocus onChange={costInputHandler}/>
 
       </div>
 
-      <button className="btn" onClick={onCancel}>
+      <button type="button" className="btn" onClick={onCancel} >
         Cancel
       </button>
-      <button className="btn" onClick={(e) => onSubmit(e, selTeamId, cost)}>
+      <button type="submit" className="btn" >
         Confirm
       </button>
-    </div>
+    </form>
   );
 }
 

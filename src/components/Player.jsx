@@ -1,8 +1,9 @@
-function Player({player}) {
+function Player({player, removePlayer}) {
   
   return (
     <>
-      <div>{player.giocatore}</div>
+      <div>{player.giocatore} {player.cost}</div>
+      <button onClick={() => removePlayer(player)}>remove</button>
     </>
   )
 }

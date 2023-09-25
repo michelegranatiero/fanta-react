@@ -1,15 +1,21 @@
-import { useState, useContext} from "react";
-import { SettingsCtx, TeamsCtx } from "../utility/Context";
-
+import { useState} from "react";
 import { useNavigate } from 'react-router-dom';
+import useLocalStorage from '../utility/useLocalStorage';
+
 
 const NewDraft = () => {
 
   const navigate = useNavigate();
 
-  const [settings, setSettings] = useContext(SettingsCtx);
+  const [settings, setSettings] = useLocalStorage("settings", null);
 
-  const [teams, setTeams] = useContext(TeamsCtx)
+  const [teams, setTeams] = useLocalStorage("teams", null);
+
+  const [players, setPlayers] = useLocalStorage("players", null);
+
+  const [selPlayer, setSelPlayer] = useLocalStorage("selPlayer", null);
+
+
 
   const [formData, setFormData] = useState({
     mode: "classic",
@@ -27,7 +33,8 @@ const NewDraft = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value} = e.target;
+    const name = e.target.name;
+    const value = e.target.type === "number" ? e.target.valueAsNumber : e.target.value;
     setFormData((prevFormData) => ({...prevFormData, [name]: value }));
   }
 
@@ -36,8 +43,7 @@ const NewDraft = () => {
     const toDelete = formData.mode === "classic"? ['por', 'gm'] : ["p","d","c","a"];
     toDelete.forEach(e => delete formData[e]);
 
-    /* setSettings((prev) => ({...prev, ["settings"]: formData})) */
-    setSettings(formData);
+    setSettings(formData);/* ------------------------ */
 
     /* set Teams */
     let initTeams = [];
@@ -45,12 +51,12 @@ const NewDraft = () => {
     for (let i=1; i < formData.numTeams + 1; i++) {
       initTeams.push({"id": i, "numPlayers" : numPlayers, "startingCredits": formData.credits, "name": "Team " + i, "players":[]})
     }
-    setTeams(initTeams);
 
-    localStorage.setItem('settings', JSON.stringify(formData));
-    localStorage.setItem('players', null); /* reset players */
-    localStorage.setItem('selPlayer', null); /* reset players */
-    localStorage.setItem('teams', null); /* reset players */
+    setTeams(initTeams);/* ----------------------- */
+    setSelPlayer(null);
+    setPlayers(null); /* -----------------VALUTA SE LASCIARE LA POSSIBILITA DI USARE QUELLO GIA MEMORIZZATO ---------*/
+
+
     navigate("/draft", {replace: true})
   }
 

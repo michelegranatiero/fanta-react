@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { TeamsCtx } from "../utility/Context";
+import { useEffect, useRef, useState } from "react";
+import useLocalStorage from "../utility/useLocalStorage";
 
 import Player from "./Player";
 
 function Team({team, pushBackPlayer}) {
 
-  const [teams, setTeams] = useContext(TeamsCtx);
+  const [teams, setTeams] = useLocalStorage("teams", null);
 
   function changeTeamStuff(e) {
     const { name, value } = e.target;

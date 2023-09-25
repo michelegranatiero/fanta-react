@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext} from "react";
+import { useState} from "react";
+import useLocalStorage from "../utility/useLocalStorage";
 
 import PlayersImport from "../components/PlayersImport";
 import Team from "../components/Team";
@@ -6,34 +7,17 @@ import AuctionDisplay from "../components/AuctionDisplay";
 import Modal from "../components/Modal";
 import Backdrop from "../utility/Backdrop";
 
-import { PlayersCtx, SelPlayerCtx, SettingsCtx, TeamsCtx } from "../utility/Context";
-
 const Draft = () => {
-  const [settings, setSettings] = useContext(SettingsCtx);
 
-  /* const [players, setPlayers] = useState(
-    JSON.parse(localStorage.getItem("players"))
-  ); */ /* if set, else null */
+  const [settings, setSettings] = useLocalStorage("settings", null);
 
-  const [players, setPlayers] = useContext(PlayersCtx)
+  const [players, setPlayers] = useLocalStorage("players", null)
 
-  const [selPlayer, setSelPlayer] = useContext(SelPlayerCtx);
-  const [currIndex, setCurrIndex] = useState(null);
+  const [selPlayer, setSelPlayer] = useLocalStorage("selPlayer", null);
+  const [currIndex, setCurrIndex] = useLocalStorage("currIndex", null);
 
-  const [teams, setTeams] = useContext(TeamsCtx);
+  const [teams, setTeams] = useLocalStorage("teams", null);
 
-
-  useEffect(() => {
-    if (players){
-      localStorage.setItem("players", JSON.stringify(players));
-    }
-  }, [players]);
-
-  /* useEffect(() => {
-    if (!players && JSON.parse(localStorage.getItem("players"))) {
-      setPlayers(JSON.parse(localStorage.getItem("players")))
-    }
-  }) */
 
   function updatePlayersList(data) {
     /* shuffling players */
@@ -43,6 +27,7 @@ const Draft = () => {
       elem["sortId"] = idx;
     });
     setPlayers(shuffle);
+
     /* set selector to the first player */
     if (shuffle){
       setSelPlayer(shuffle[0]);
@@ -113,8 +98,6 @@ const Draft = () => {
 
   function pushBackPlayerIntoAuction(player){
     let newPlayers = players;
-    /* newPlayers.push(player); */
-
     let idx = players.length;
     for (let i=0; i < players.length; i+=1) {
       if (players[i].sortId > player.sortId) {
@@ -135,23 +118,22 @@ const Draft = () => {
   return (
     <>
       {!players && <PlayersImport updatePlayers={updatePlayersList} />}
-      {selPlayer && (
-        <AuctionDisplay
-          goPrev={goPrevPlayer}
-          goNext={goNextPlayer}
-          openModal={ModalToggleHandlder}
-          selPlayer={selPlayer}
-          progressIndex={players.findIndex((elem) => elem === selPlayer)}
-          playersLength = {players.length}
-          
-        />
-      )}
-      {players && (
-        <div className="teams-cont">
-          {teams.map((team) => (
-            <Team key={team.id} id={team.id} team={team} pushBackPlayer={pushBackPlayerIntoAuction}/>
-          ))}
-        </div>
+      {players && selPlayer && (
+        <>
+          <AuctionDisplay
+            goPrev={goPrevPlayer}
+            goNext={goNextPlayer}
+            openModal={ModalToggleHandlder}
+            selPlayer={selPlayer}
+            progressIndex={currIndex}
+            playersLength = {players.length}
+          />
+          <div className="teams-cont">
+            {teams.map((team) => (
+              <Team key={team.id} id={team.id} team={team} pushBackPlayer={pushBackPlayerIntoAuction}/>
+            ))}
+          </div>
+        </>
       )}
       {modalToggle && <Modal onCancel={ModalToggleHandlder} onSubmitHandler={pushPlayerValidation} selPlayer={selPlayer} mode={settings.mode} />}
       {modalToggle && <Backdrop onClick={ModalToggleHandlder} />}

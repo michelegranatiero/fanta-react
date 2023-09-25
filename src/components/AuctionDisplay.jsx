@@ -1,11 +1,10 @@
-import { useState, useContext } from "react";
-import { SelPlayerCtx, SettingsCtx } from "../utility/Context";
+import useLocalStorage from "../utility/useLocalStorage";
 
 function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, playersLength}) {
   const noCampUrl =
     "https://content.fantacalcio.it/web/campioncini/card2021/NO-CAMPIONCINO.png?v=35";
 
-  const [settings, setSettings] = useContext(SettingsCtx);
+  const [settings, setSettings] = useLocalStorage("settings", null);
 
   return (
     <>

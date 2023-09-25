@@ -8,6 +8,9 @@ function Home() {
   return (
     <>
       <div className="btn-container">
+        <button className="btn-new" onClick={() => navigate("draft")}>
+           Resume Draft
+        </button>
         <button className="btn-new" onClick={() => navigate("new-draft")}>
           <MdAddCircle size={22} /> New Draft
         </button>

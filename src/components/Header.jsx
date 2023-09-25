@@ -2,7 +2,7 @@ import { MdAddCircle, MdSportsSoccer } from 'react-icons/md';
 
 import { useNavigate } from 'react-router-dom';
 
-const Header = (props) => {
+const Header = () => {
 
   const navigate = useNavigate();
 

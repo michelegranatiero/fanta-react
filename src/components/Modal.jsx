@@ -1,9 +1,9 @@
-import { useState, useContext, useRef } from "react";
-import { TeamsCtx } from "../utility/Context";
+import { useState, useRef } from "react";
+import useLocalStorage from "../utility/useLocalStorage";
 
 function Modal({ onCancel, onSubmitHandler, selPlayer, mode }) {
 
-  const [teams] = useContext(TeamsCtx)
+  const [teams, setTeams] = useLocalStorage("teams", null);
 
   const [cost, setCost] = useState(1);
   const [selTeamId, setSelTeamId] = useState(teams[0].id);

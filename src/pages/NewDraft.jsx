@@ -49,8 +49,19 @@ const NewDraft = () => {
     let initTeams = [];
     const numPlayers = formData.mode === "classic" ? (formData.p + formData.d + formData.c + formData.a) : formData.por + formData.gm;
     for (let i=1; i < formData.numTeams + 1; i++) {
-      initTeams.push({"id": i, "numPlayers" : numPlayers, "startingCredits": formData.credits, "name": "Team " + i, "players":[]})
+      initTeams.push({
+        "id": i,
+        "numPlayers" : numPlayers,
+        "startingCredits": formData.credits,
+        "name": "Team " + i,
+        "players":[],
+        "spentCredits": 0,
+        "resCredits": formData.credits, 
+        "maxOffer": (formData.credits - numPlayers + 1),
+      })
     }
+
+
 
     setTeams(initTeams);/* ----------------------- */
     setSelPlayer(null);

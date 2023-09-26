@@ -10,6 +10,7 @@ const useLocalStorage = (key, initialValue) => {
       const container = localStorage.getItem("fanta-draft");
       if (container){
         const item = JSON.parse(container)[key];
+        /* console.log("getitem", key, item) */
         return item ? item : initialValue
       }else{
         return initialValue
@@ -23,6 +24,7 @@ const useLocalStorage = (key, initialValue) => {
   const keyRef = useRef(key);
   const setValue = (value) => {
     try {
+      /* console.log("setitem", key, value) */
       setStoredValue(value);
       if (typeof window !== "undefined") {
         const container = localStorage.getItem("fanta-draft");

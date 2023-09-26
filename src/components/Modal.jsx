@@ -20,7 +20,7 @@ function Modal({ onCancel, onSubmitHandler, selPlayer, mode }) {
   
   function submitForm(e){
     e.preventDefault();
-    onSubmitHandler(selTeamId,cost);
+    onSubmitHandler(selTeamId,parseInt(cost));
   }
 
   return (

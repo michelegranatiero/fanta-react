@@ -1,18 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import useLocalStorage from "../utility/useLocalStorage";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import Player from "./Player";
 
-function Team({team, pushBackPlayer}) {
-
-  const [teams, setTeams] = useLocalStorage("teams", null);
+function Team({team, pushBackPlayer, teams, setBackTeams}) {
 
   function changeTeamStuff(e) {
     const { name, value } = e.target;
     const updatedTeam = { ...teams[team.id - 1], [name]: value };
     const newTeams = [...teams];
     newTeams[team.id - 1] = updatedTeam;
-    setTeams(newTeams);
+    /* setTeams(newTeams); */
+    setBackTeams(newTeams);
   }
 
 
@@ -53,7 +51,8 @@ function Team({team, pushBackPlayer}) {
     const updatedTeam = {...team, "players": newTeamPlayers};
     const newTeams = [...teams];
     newTeams[team.id - 1] = updatedTeam;
-    setTeams(newTeams);
+    /* setTeams(newTeams); */
+    setBackTeams(newTeams);
     /* remove cost from player */
     delete player.cost;
     /* pushback player in the auction list */
@@ -65,17 +64,27 @@ function Team({team, pushBackPlayer}) {
 
   const spentCredits = team.players.reduce((tot, curr) => tot + Number(curr.cost), 0);
   const resCredits = team.startingCredits - spentCredits;
-  const maxOffer = resCredits - (team.numPlayers - team.players.length);
-
-  useEffect(() =>{
-    const updatedTeam = {...team, "spentCredits": spentCredits, "resCredits": resCredits, "maxOffer": maxOffer}
-    const newTeams = [...teams];
-    newTeams[team.id - 1] = updatedTeam;
-    setTeams(newTeams);
-  },[team.players])
+  const maxOffer = resCredits - (team.numPlayers - team.players.length) + 1;
 
   
+  /* CONCURRENCY MAY BE A PROBLEM */
+  const firstRenderDone = useRef(false)
+  /* const prevTeamPlayers = useRef(["prova"]); */
 
+  useLayoutEffect(() =>{
+    console.log("useffect")
+    if (firstRenderDone.current) {
+      console.log("useffectiiiiiiiiiiiiin")
+      /* prevTeamPlayers.current = team.players; */
+      const updatedTeam = {...team, "spentCredits": spentCredits, "resCredits": resCredits, "maxOffer": maxOffer}
+      const newTeams = [...teams];
+      newTeams[team.id - 1] = updatedTeam;
+      /* setTeams(newTeams); */
+      setBackTeams(newTeams);
+    }else{
+      firstRenderDone.current = true;
+    }
+  },[team.players])
 
 
   return (

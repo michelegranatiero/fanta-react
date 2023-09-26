@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import useLocalStorage from "../utility/useLocalStorage";
 
 import PlayersImport from "../components/PlayersImport";
@@ -71,7 +71,10 @@ const Draft = () => {
 
   /* Assegnamento Giocatore da Modal*/
   function pushPlayerValidation(teamId, cost) {
-    if(cost<1){
+    /* console.log(cost<1, isNaN(cost), cost) */
+    /* console.log(teamId-1, teams[teamId-1].maxOffer) */
+    /* console.log("validation", teams) */
+    if(cost<1 || isNaN(cost)|| cost === ""){
       alert('il costo del giocatore non può essere inferiore a 1')
     }else if(cost > teams[teamId-1].maxOffer){
       alert('Il costo del giocatore supera la massima offerta che la squadra selezionata può presentare')
@@ -82,6 +85,11 @@ const Draft = () => {
       pushPlayerIntoTeam(teamId, cost)
     }
   }
+
+/*   useEffect(() => {
+    console.log("maxofferchange",teams)
+  }, [teams[0].maxOffer])
+ */
 
   function pushPlayerIntoTeam(teamId, cost){
     const newPlayer = {...selPlayer, "cost" : cost};
@@ -114,6 +122,7 @@ const Draft = () => {
     setSelPlayer(newPlayers[idx2])
   }
 
+  
 
   return (
     <>
@@ -130,7 +139,7 @@ const Draft = () => {
           />
           <div className="teams-cont">
             {teams.map((team) => (
-              <Team key={team.id} id={team.id} team={team} pushBackPlayer={pushBackPlayerIntoAuction}/>
+              <Team key={team.id} team={team} teams={teams} setBackTeams={(val) => setTeams(val)} pushBackPlayer={pushBackPlayerIntoAuction}/>
             ))}
           </div>
         </>

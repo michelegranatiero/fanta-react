@@ -137,13 +137,14 @@ const Draft = () => {
             progressIndex={currIndex}
             playersLength = {players.length}
           />
-          <div className="teams-cont">
-            {teams.map((team) => (
-              <Team key={team.id} team={team} teams={teams} setBackTeams={(val) => setTeams(val)} pushBackPlayer={pushBackPlayerIntoAuction}/>
-            ))}
-          </div>
+          
         </>
       )}
+      <div className="teams-cont">
+        {teams.map((team) => (
+          <Team key={team.id} team={team} teams={teams} setBackTeams={(val) => setTeams(val)} pushBackPlayer={pushBackPlayerIntoAuction}/>
+        ))}
+      </div>
       {modalToggle && <Modal onCancel={ModalToggleHandlder} onSubmitHandler={pushPlayerValidation} selPlayer={selPlayer} mode={settings.mode} />}
       {modalToggle && <Backdrop onClick={ModalToggleHandlder} />}
     </>

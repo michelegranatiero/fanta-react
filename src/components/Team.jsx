@@ -72,9 +72,7 @@ function Team({team, pushBackPlayer, teams, setBackTeams}) {
   /* const prevTeamPlayers = useRef(["prova"]); */
 
   useLayoutEffect(() =>{
-    console.log("useffect")
     if (firstRenderDone.current) {
-      console.log("useffectiiiiiiiiiiiiin")
       /* prevTeamPlayers.current = team.players; */
       const updatedTeam = {...team, "spentCredits": spentCredits, "resCredits": resCredits, "maxOffer": maxOffer}
       const newTeams = [...teams];

@@ -5,12 +5,16 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
 
+  const savedDraft = localStorage.getItem("fanta-draft");
+
   return (
     <>
       <div className="btn-container">
-        <button className="btn-new" onClick={() => navigate("draft")}>
-           Resume Draft
-        </button>
+        {savedDraft && (
+          <button className="btn-new" onClick={() => navigate("draft")}>
+            Resume Draft
+          </button>
+        )}
         <button className="btn-new" onClick={() => navigate("new-draft")}>
           <MdAddCircle size={22} /> New Draft
         </button>

@@ -11,20 +11,18 @@ function Home() {
     <>
       <div className="btn-container">
         {savedDraft && (
-          <button className="btn-new" onClick={() => navigate("draft")}>
-            Resume Draft
+          <button className="btn btn-bigger" onClick={() => navigate("draft")}>
+            <span>Resume Draft</span>
           </button>
         )}
-        <button className="btn-new" onClick={() => navigate("new-draft")}>
-          <MdAddCircle size={22} /> New Draft
+        <button className="btn btn-new btn-bigger" onClick={() => navigate("new-draft")}>
+          <span className="btn-icon"><MdAddCircle size={22} /></span>
+          <span className="btn-text">New Draft</span>
         </button>
       </div>
-      <div className="cards-container">
-        {/* caricare tutte le aste dal db fetch and display (nome+modalità) */}
+      {/* <div className="cards-container">
         <div className="card"> Asta 1</div>
-        <div className="card"> Asta 2</div>
-        <div className="card"> Asta 3 di prova </div>
-      </div>
+      </div> */}
     </>
   );
 }

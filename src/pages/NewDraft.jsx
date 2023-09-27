@@ -125,7 +125,7 @@ const NewDraft = () => {
           </div>
           {/* submit button */}
           <div className="btn-cont">
-            <button type="submit" className="submit-btn" >Crea asta</button>
+            <button type="submit" className="btn" >Crea asta</button>
           </div>
         </form>
       </div>

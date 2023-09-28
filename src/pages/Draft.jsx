@@ -7,6 +7,8 @@ import AuctionDisplay from "../components/AuctionDisplay";
 import Modal from "../components/Modal";
 import Backdrop from "../utility/Backdrop";
 
+import { MdUploadFile, MdUpload } from "react-icons/md";
+
 const Draft = () => {
 
   const [settings, setSettings] = useLocalStorage("settings", null);
@@ -126,7 +128,10 @@ const Draft = () => {
 
   return (
     <>
-      {!players && <PlayersImport updatePlayers={updatePlayersList} />}
+      {!players && <PlayersImport updatePlayers={updatePlayersList} >
+          <span>Importa lista giocatori</span> 
+          <MdUploadFile size={22} />
+        </PlayersImport>}
       {players && selPlayer && (
         <>
           <AuctionDisplay

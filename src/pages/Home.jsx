@@ -9,7 +9,7 @@ function Home() {
 
   return (
     <>
-      <div className="btn-container">
+      <div className="btn-cont-home">
         {savedDraft && (
           <button className="btn btn-bigger" onClick={() => navigate("draft")}>
             <span>Resume Draft</span>

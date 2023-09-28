@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function PlayersImport({updatePlayers}) {
+function PlayersImport({updatePlayers, children}) {
 
   /* const [jsonData, setJsonData] = useState(null); */
 
@@ -48,13 +48,17 @@ function PlayersImport({updatePlayers}) {
   };
 
   return (
-    <input
+    <div className="upload-file">
+      <input
         type="file"
+        id="file"
         name="file"
         accept=".csv"
         onChange={handleFileChange}
-        className="upload-file"
       />
+      <label htmlFor="file" className="btn">{children}</label>
+    </div>
+    
   )
 }
 

@@ -2,6 +2,7 @@ import { useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../utility/useLocalStorage';
 
+import { GiTwoCoins } from "react-icons/gi";
 
 const NewDraft = () => {
 
@@ -77,9 +78,9 @@ const NewDraft = () => {
         <form id="settingsForm" onSubmit={submitForm} className="form">
           <div className="form-inputs">
             {/* mode */}
-            <div className="mode">
+            <div className="mode-new-draft">
               <div>Modalità</div>
-              <div>
+              <div className="radio-cont">
                 <input type="radio" name="mode" value="classic" id="classic" onChange={handleChange} checked={formData.mode === "classic"}/>
                 <label htmlFor="classic">Classic</label>
                 <input type="radio" name="mode" value="mantra" id="mantra" onChange={handleChange} checked={formData.mode === "mantra"}/>
@@ -87,9 +88,14 @@ const NewDraft = () => {
               </div>
             </div>
             {/* credits */}
-            <div className="credits" >
+            <div className="credits-new-draft" >
               <label htmlFor="credits">Crediti per squadra</label>
-              <input type="number" name="credits" id="credits" value={formData.credits} min={0} onChange={handleChange}/>
+              <div className="input-div">   
+                <input type="number" name="credits" id="credits" value={formData.credits} min={0} onChange={handleChange}/>
+                <div className="credits-icon-div">
+                  <GiTwoCoins className="credits-icon" size={19}/>
+                </div>
+              </div>
             </div>
             {/* players number */}
             <div className="players-num">
@@ -124,8 +130,8 @@ const NewDraft = () => {
             </div>
           </div>
           {/* submit button */}
-          <div className="btn-cont">
-            <button type="submit" className="btn" >Crea asta</button>
+          <div className="btn-cont-draft">
+            <button type="submit" className="btn btn-new-draft" >Crea asta</button>
           </div>
         </form>
       </div>

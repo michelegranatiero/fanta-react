@@ -1,5 +1,7 @@
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { MdEdit } from "react-icons/md";
+
 import Player from "./Player";
 
 function Team({team, pushBackPlayer, teams, setBackTeams}) {
@@ -87,23 +89,24 @@ function Team({team, pushBackPlayer, teams, setBackTeams}) {
 
   return (
     <div className="team">
-      {editOn?(
-        <>
-          <input
-            type="text"
-            ref={inputRef}
-            name="name"
-            value={team.name}
-            onChange={changeTeamStuff}
-            onKeyUp={handleKeyUp}
-            autoFocus
-          />
-        </>
-      ):(
-        <h3 onDoubleClick={changeEditMode}>{team.name}</h3>
-      )}
-      <button ref={buttonRef} onClick={changeEditMode}>change</button>
-
+      <div className="team-name-cont">
+        {editOn?(
+          <>
+            <input
+              type="text"
+              ref={inputRef}
+              name="name"
+              value={team.name}
+              onChange={changeTeamStuff}
+              onKeyUp={handleKeyUp}
+              autoFocus
+            />
+          </>
+        ):(
+          <div className="team-name" onDoubleClick={changeEditMode}>{team.name}</div>
+        )}
+        <button className="btn-team-edit" ref={buttonRef} onClick={changeEditMode}><MdEdit/></button>
+      </div>
       <div className="credits"> Tot: {team.startingCredits}</div>
       <div className="res-credits">Res:  {resCredits}</div>
       <div className="max-offer">Offerta max:  {maxOffer}</div>

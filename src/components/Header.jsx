@@ -10,7 +10,7 @@ const Header = () => {
     <header className="header">
       <h1 className="logo" onClick={() => navigate("/")}>
         <MdSportsSoccer />
-        Fanta Draft
+        Fantagment
       </h1>
       <p>
         {/* <button className={classes.button} onClick={() => navigate('new-draft')}>

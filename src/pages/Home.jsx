@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const navigate = useNavigate();
 
-  const savedDraft = localStorage.getItem("fanta-draft");
+  const savedDraft = localStorage.getItem("fantagment");
 
   return (
     <>

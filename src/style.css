@@ -40,19 +40,25 @@
 
 html{
   min-height: 100%;
-  
+  background-color: #4b5da5;
+  background-image: radial-gradient(ellipse at top left, #4b5da5, #383f60);
+  /* overscroll-behavior-y: none; */
 }
 
 body{
   margin: 0;
-  color: #ffffff;
-  background-image: radial-gradient(ellipse at top left, #4b5da5, #383f60);
+  color: #ffffff;/* 
+  background-image: radial-gradient( #4b5da5, #383f60); */
+  /* background-color: #4b5da5; */
+  min-height: 100vh;
+  /* overscroll-behavior: contain; */
 }
 
 #root {
   margin: 0 auto;
   max-width: 2000px;
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 ::selection {
@@ -410,6 +416,7 @@ font-size: 15px;
 /* auction-------------------- */
 .auction-wrapper{
   margin: 0 5%;
+  display: flex;
 }
 
 .auction-cont{
@@ -594,10 +601,10 @@ font-size: 15px;
   font-size: 14px;
   padding: 2rem;
   overflow: auto;
+  gap: 0.3rem;
 }
 
 .team {
-  margin: 0 0.2rem;
   border: 2px solid white;
   border-radius: 25px;
   padding: 0.7rem;
@@ -609,7 +616,6 @@ font-size: 15px;
 }
 
 .team .team-name {
-  font-size: 18px;
   font-weight: bold;
   white-space: nowrap;
   overflow: auto;
@@ -633,6 +639,7 @@ font-size: 15px;
   align-items: center;
   justify-content: space-between;
   gap: 5px;
+  font-size: 18px;
 }
 
 .btn-team-edit{
@@ -645,9 +652,10 @@ font-size: 15px;
   border-radius: 6px;
   border: 2px solid var(--dark-blue);
   cursor: pointer;
+  font-size: inherit;
 
   & * {
-    font-size: 18px;
+    font-size: inherit;
     color: white;
   }
 }
@@ -887,13 +895,6 @@ font-size: 15px;
   }
 }
 
-@media (max-width: 480px) {
-  .auct-core{
-    margin: 0;
-  }
-}
-
-
 @media (max-width: 600px) {
   .header > .logo{
     margin: 0 auto;
@@ -902,8 +903,74 @@ font-size: 15px;
 
 
 
+@media (max-width: 480px) { /* smartphones / mobile devices */
+  .auct-core{
+    margin: 0;
+  }
+
+  .team{
+    min-width: 90%;
+    max-width: 90%;
+  }
+
+  .teams-cont{
+    font-size: 18px;
+    gap: 1rem;
+  }
+
+  .team .team-name-cont{
+    font-size: 24px;
+  }
+
+  .form-cont{
+    font-size: 20px;
+  }
+
+  .form-inputs input[type=number]{
+    font-size: 18px;
+    height: 35px;
+    width: 70px;
+  }
+
+  select, .team input{
+    font-size: 18px;
+  }
+
+}
+
+@media ( 481px <= width <= 768px){ /* tablets and ipads */
+  
+}
+
+@media ( 769px <= width <= 1024px){ /* laptops and small  */
+
+}
+
+@media ( 1025px <= width <= 1200px){ /* desktop and large */
+
+}
+
+@media ( width >= 1201px){ /* extra large */
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* portrait / landscape */
-/* @media (orientation: portrait){ 
-
-} */
+@media (orientation: portrait){ 
+  
+}

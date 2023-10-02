@@ -1,4 +1,4 @@
-import { useRef, useState} from "react";
+import { useEffect, useRef, useState} from "react";
 import { useDraggable } from "react-use-draggable-scroll";
 
 import useLocalStorage from "../utility/useLocalStorage";
@@ -17,7 +17,7 @@ const Draft = () => {
   const [players, setPlayers] = useLocalStorage("players", null)
 
   const [selPlayer, setSelPlayer] = useLocalStorage("selPlayer", null);
-  const [currIndex, setCurrIndex] = useLocalStorage("currIndex", null);
+  const [currIndex, setCurrIndex] = useLocalStorage("currIndex", 0);
 
   const [teams, setTeams] = useLocalStorage("teams", null);
 
@@ -155,12 +155,13 @@ const Draft = () => {
   }
 
 
-
   const [drag, setDrag] = useState(true)
 
 
   const ref = useRef();
   const { events } = useDraggable(ref, {applyRubberBandEffect: true, isMounted: drag});
+
+
 
   return (
     <>

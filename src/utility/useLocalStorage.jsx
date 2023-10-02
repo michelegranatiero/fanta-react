@@ -7,11 +7,11 @@ const useLocalStorage = (key, initialValue) => {
       return initialValue;
     }
     try {
-      const container = localStorage.getItem("fanta-draft");
+      const container = localStorage.getItem("fantagment");
       if (container){
         const item = JSON.parse(container)[key];
         /* console.log("getitem", key, item) */
-        return item ? item : initialValue
+        return item ? item : initialValue /* problem if item = 0 because 0 == false */
       }else{
         return initialValue
       }
@@ -27,9 +27,9 @@ const useLocalStorage = (key, initialValue) => {
       /* console.log("setitem", key, value) */
       setStoredValue(value);
       if (typeof window !== "undefined") {
-        const container = localStorage.getItem("fanta-draft");
+        const container = localStorage.getItem("fantagment");
         const newContainer = container ? {...JSON.parse(container), [keyRef.current] : value} : {[keyRef.current] : value};
-        localStorage.setItem("fanta-draft", JSON.stringify(newContainer));
+        localStorage.setItem("fantagment", JSON.stringify(newContainer));
       }
     } catch (error) {
       console.log(error);

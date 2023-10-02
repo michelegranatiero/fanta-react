@@ -7,7 +7,7 @@ function Role({role, roleClass}) {
   return (
     <div className={roleClass}>
       {newRoles.map((r) => {
-        return <div className={` role role-${r}`}>{r}</div>
+        return <div key={r} className={` role role-${r}`}>{r}</div>
       })}
     </div>
   )

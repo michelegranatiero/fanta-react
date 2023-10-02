@@ -14,7 +14,10 @@
     "react-context-mutex": "^2.1.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
-    "react-router-dom": "^6.15.0"
+    "react-indiana-drag-scroll": "^3.0.3-alpha",
+    "react-router-dom": "^6.15.0",
+    "react-swipeable": "^7.0.1",
+    "react-use-draggable-scroll": "^0.4.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

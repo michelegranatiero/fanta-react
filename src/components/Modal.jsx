@@ -4,7 +4,7 @@ import Role from "./Role";
 import { GiTwoCoins } from "react-icons/gi";
 import { MdClose, MdCheck } from "react-icons/md";
 
-function Modal({ onCancel, onSubmitHandler, selPlayer, mode }) {
+function Modal({ onCancel, onSubmitHandler, selPlayer, mode, type }) {
 
   const [teams, setTeams] = useLocalStorage("teams", null);
 
@@ -23,41 +23,58 @@ function Modal({ onCancel, onSubmitHandler, selPlayer, mode }) {
   
   function submitForm(e){
     e.preventDefault();
-    onSubmitHandler(selTeamId,parseInt(cost));
+    if (type == "add") onSubmitHandler(selTeamId, parseInt(cost));
+    else if (type == "delete") onSubmitHandler();
   }
 
   return (
-    <div className="player-form-cont">
-      <form id="player-form" onSubmit={submitForm} className="player-form">
-        <div className="modal-info">
-            <Role roleClass="auct-roles-cont" role={mode === "classic" ? selPlayer.ruoloClassic : selPlayer.ruoliMantra}/>
-            <div className="player-name">{selPlayer.giocatore}</div>
-          {/* <div className="auct-quot-cont">
-            <div className="auct-quot"> <span>{mode === "classic" ? selPlayer.quotClass : selPlayer.quotMan}</span> 
-              <GiTwoCoins className="credits-icon" size={19}/>
-            </div>
-            <div style={{fontSize: "12px"}}>Quotazione</div>
-          </div> */}
-        </div>
-        <div className="modal-form">
-          <select name="selTeam" id="selTeam" defaultValue={selTeamId} onChange={(e) => (setSelTeamId(e.target.value))}>
-            {teams.map((team) => (
-              <option key={team.id} value={team.id}>{team.name}</option>
-            ))}
-          </select>
-          <input ref={inputRef} type="number" id="cost" name="cost" value={cost} autoFocus onChange={costInputHandler}/>
+    <div>
+      <div className="player-form-cont">
+        <form id="player-form" onSubmit={submitForm} className="player-form">
+          <div className="modal-info">
+              <Role roleClass="auct-roles-cont" role={mode === "classic" ? selPlayer.ruoloClassic : selPlayer.ruoliMantra}/>
+              <div className="player-name">{selPlayer.giocatore}</div>
+            {/* <div className="auct-quot-cont">
+              <div className="auct-quot"> <span>{mode === "classic" ? selPlayer.quotClass : selPlayer.quotMan}</span> 
+                <GiTwoCoins className="credits-icon" size={19}/>
+              </div>
+              <div style={{fontSize: "12px"}}>Quotazione</div>
+            </div> */}
+          </div>
+          {type == "add" && (
+            <div className="modal-form">
+              <select name="selTeam" id="selTeam" defaultValue={selTeamId} onChange={(e) => (setSelTeamId(e.target.value))}>
+                {teams.map((team) => (
+                  <option key={team.id} value={team.id}>{team.name}</option>
+                ))}
+              </select>
+              <input ref={inputRef} type="number" id="cost" name="cost" value={cost} autoFocus onChange={costInputHandler}/>
 
-        </div>
-        <div className="modal-buttons">
-          <button type="button" className="btn btn-cancel" onClick={onCancel} >
-            Annulla
-          </button>
-          <button type="submit" className="btn btn-confirm" >
-            Conferma
-          </button>
-        </div>       
-        
-      </form>
+            </div>
+          )}
+          {type == "delete" && (
+            <div className="remove-warning">
+              Sei sicuro di voler cancellare questa operazione?
+            </div>
+          )}
+          <div className="modal-buttons">
+            <button type="button" className="btn btn-cancel" onClick={onCancel} >
+              Annulla
+            </button>
+            {type == "add" ? (
+              <button type="submit" className="btn btn-confirm" >
+                Conferma
+              </button>
+            ):(
+              <button type="submit" className="btn btn-delete" >
+                Elimina
+              </button>
+            )}
+          </div>       
+          
+        </form>
+      </div>
+      <div className="backdrop" onClick={onCancel}/>;
     </div>
   );
 }

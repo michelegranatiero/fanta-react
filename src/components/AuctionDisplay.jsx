@@ -3,16 +3,38 @@ import useLocalStorage from "../utility/useLocalStorage";
 import { GiTwoCoins } from "react-icons/gi";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
+import { useSwipeable } from "react-swipeable";
+
 function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, playersLength}) {
   const noCampUrl =
     "https://content.fantacalcio.it/web/campioncini/card2021/NO-CAMPIONCINO.png?v=35";
 
   const [settings, setSettings] = useLocalStorage("settings", null);
 
+  const config = {
+    delta: 50,                             // min distance(px) before a swipe starts. *See Notes*
+    preventScrollOnSwipe: true,           // prevents scroll during swipe (*See Details*)
+    trackTouch: true,                      // track touch input
+    trackMouse: false,                     // track mouse input
+    rotationAngle: 0,                      // set a rotation angle
+    swipeDuration: 500,               // allowable duration of a swipe (ms). *See Notes*
+    touchEventOptions: { passive: true },  // options for touch listeners (*See Details*)
+  }
+
+  const swipeHandlers = useSwipeable({
+    /* onSwiped: (eventData) => console.log("User Swiped!", eventData), */
+    onSwipedLeft: goNext,
+    onSwipedRight: goPrev,
+    ...config,
+  });
+
+
+
+
   return (
     <>
     <div className="auction-wrapper">
-      <div className="auction-cont">
+      <div className="auction-cont" /* swipe handlers */ {...swipeHandlers} /* style={{ touchAction: 'pan-y' }} */>
         <button className="btn-skip" onClick={goPrev}><MdKeyboardArrowLeft/></button>
         <div className="auct-core">
           <div  className="player-cont">
@@ -30,7 +52,7 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
               />
             </div>
             <div className="player-info">
-              <div className="player-name">{selPlayer.giocatore}</div>
+              <div className="player-name">{selPlayer.giocatore} <div>{selPlayer.ceduto === "1" && "*"}</div></div>
               <div>{selPlayer.squadra}</div>
                 <Role roleClass="auct-roles-cont" role={settings.mode === "classic" ? selPlayer.ruoloClassic : selPlayer.ruoliMantra}/>
                 <div className="auct-quot"><span>{settings.mode === "classic" ? selPlayer.quotClass : selPlayer.quotMan}</span>

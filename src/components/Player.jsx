@@ -3,11 +3,22 @@ import Role from "./Role";
 
 import { MdPersonRemove } from "react-icons/md";
 
-
-function Player({player, removePlayer}) {
+function Player({player, team, remPlayer}) {
 
   const [settings, setSettings] = useLocalStorage("settings", null);
+
+  /* Modal */
+
+  const [toRemove, setToRemove, toggleModal] = remPlayer;
+
+  function modalToggleHandler(e) {
+    e.preventDefault();
+    setToRemove([player, team])
+    toggleModal();
+  }
+
   
+
   return (
     <>
       <div className="player-box">
@@ -16,7 +27,7 @@ function Player({player, removePlayer}) {
           {player.giocatore}
         </div>
         {player.cost} 
-        <button className="btn-rem-player" onClick={() => removePlayer(player)}> <MdPersonRemove/> </button>
+        <button className="btn-rem-player" onClick={modalToggleHandler}> <MdPersonRemove/> </button>
       </div>
       
     </>

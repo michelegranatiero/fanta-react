@@ -1,13 +1,14 @@
-import { useEffect, useState} from "react";
+import { useRef, useState} from "react";
+import { useDraggable } from "react-use-draggable-scroll";
+
 import useLocalStorage from "../utility/useLocalStorage";
 
 import PlayersImport from "../components/PlayersImport";
 import Team from "../components/Team";
 import AuctionDisplay from "../components/AuctionDisplay";
 import Modal from "../components/Modal";
-import Backdrop from "../utility/Backdrop";
 
-import { MdUploadFile, MdUpload } from "react-icons/md";
+import { MdUploadFile } from "react-icons/md";
 
 const Draft = () => {
 
@@ -63,12 +64,16 @@ const Draft = () => {
   }
 
   /* Modal */
-  const [modalToggle, setModalToggle] = useState(false);
+  const [modalToggle, setModalToggle] = useState({
+    assign: false,
+    delete: false,
+  });
 
-  function ModalToggleHandlder() {
+  function modalToggleHandler(val) {
     /* reverse because is going to change */
-    !modalToggle ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'unset';
-    setModalToggle(!modalToggle);
+    const toggle = modalToggle[val];
+    !toggle ? document.body.style.overflow = 'hidden' : document.body.style.overflow = 'unset';
+    setModalToggle((prev) => ({...prev, [val]: !toggle}));
   }
 
   /* Assegnamento Giocatore da Modal*/
@@ -103,7 +108,7 @@ const Draft = () => {
     /* remove player from players list*/
     removePlayerFromAuction(selPlayer.id)
     /* eventually add player to history */
-    ModalToggleHandlder();
+    modalToggleHandler("assign");
   }
 
   function pushBackPlayerIntoAuction(player){
@@ -124,7 +129,38 @@ const Draft = () => {
     setSelPlayer(newPlayers[idx2])
   }
 
-  
+
+  const [toRemove, setToRemove] = useState([]);
+
+
+  function removePlayerFromTeam() {
+    /* update teams array */
+    const [player, team] = toRemove;
+    const newTeamPlayers = team.players.filter((plr) => plr.id !== player.id);
+    const updatedTeam = {...team, "players": newTeamPlayers};
+    const newTeams = [...teams];
+    newTeams[team.id - 1] = updatedTeam;
+    /* setTeams(newTeams); */
+    setTeams(newTeams);
+    /* remove cost from player */
+    delete player.cost;
+    /* pushback player in the auction list */
+    pushBackPlayerIntoAuction(player)
+  }
+
+
+  function removeHandler(){
+    removePlayerFromTeam()
+    modalToggleHandler("delete");
+  }
+
+
+
+  const [drag, setDrag] = useState(true)
+
+
+  const ref = useRef();
+  const { events } = useDraggable(ref, {applyRubberBandEffect: true, isMounted: drag});
 
   return (
     <>
@@ -137,7 +173,7 @@ const Draft = () => {
           <AuctionDisplay
             goPrev={goPrevPlayer}
             goNext={goNextPlayer}
-            openModal={ModalToggleHandlder}
+            openModal={() => modalToggleHandler("assign")}
             selPlayer={selPlayer}
             progressIndex={currIndex}
             playersLength = {players.length}
@@ -146,17 +182,22 @@ const Draft = () => {
         </>
       )}
       {/* Teams */}
-      <div className="teams-wrapper">
-        <div className="teams-cont">
-          {teams.map((team) => (
-            <Team key={team.id} team={team} teams={teams} setBackTeams={(val) => setTeams(val)} pushBackPlayer={pushBackPlayerIntoAuction}/>
-          ))}
-        </div>
+      <div style={{ position: "relative"}} >
+
+          <div className="teams-wrapper">
+            <div className="teams-cont " {...events} ref={ref} id="drag-scroll">
+              {teams.map((team) => (
+                <Team key={team.id} team={team} teams={teams} updateTeams={(val) => setTeams(val)} remPlayer={[toRemove, setToRemove, () => modalToggleHandler("delete")]} dragscroll={[drag, setDrag]}/>
+              ))}
+            </div>
+          </div>
+
+
       </div>
       
       {/* Modal */}
-      {modalToggle && <Modal onCancel={ModalToggleHandlder} onSubmitHandler={pushPlayerValidation} selPlayer={selPlayer} mode={settings.mode} />}
-      {modalToggle && <Backdrop onClick={ModalToggleHandlder} />}
+      {modalToggle.assign && <Modal onCancel={() => modalToggleHandler("assign")} onSubmitHandler={pushPlayerValidation} selPlayer={selPlayer} mode={settings.mode} type={"add"}/>}
+      {modalToggle.delete && <Modal onCancel={() => modalToggleHandler("delete")} onSubmitHandler={removeHandler} selPlayer={toRemove[0]} mode={settings.mode} type={"delete"}/>}
     </>
   );
 };

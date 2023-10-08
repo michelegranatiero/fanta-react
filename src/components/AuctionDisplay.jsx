@@ -5,7 +5,7 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 import { useSwipeable } from "react-swipeable";
 
-function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, playersLength}) {
+function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, playersLength, children}) {
   const noCampUrl =
     "https://content.fantacalcio.it/web/campioncini/card2021/NO-CAMPIONCINO.png?v=35";
 
@@ -37,7 +37,7 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
       <div className="auction-cont" /* swipe handlers */ {...swipeHandlers} /* style={{ touchAction: 'pan-y' }} */>
         <button className="btn-skip" onClick={goPrev}><MdKeyboardArrowLeft/></button>
         <div className="auct-core">
-          <div  className="player-cont">
+          <div className="player-cont">
             <div>
               {/* <div>{selPlayer.sortId + 1}</div> */} {/* useful for debugging */}
               <div>{progressIndex+1}/{playersLength}</div>
@@ -51,15 +51,19 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
                 className="campioncino"
               />
             </div>
-            <div className="player-info">
-              <div className="player-name">{selPlayer.giocatore} <div>{selPlayer.ceduto === "1" && "*"}</div></div>
-              <div>{selPlayer.squadra}</div>
-                <Role roleClass="auct-roles-cont" role={settings.mode === "classic" ? selPlayer.ruoloClassic : selPlayer.ruoliMantra}/>
-                <div className="auct-quot"><span>{settings.mode === "classic" ? selPlayer.quotClass : selPlayer.quotMan}</span>
-                  <GiTwoCoins className="credits-icon" size={19}/>
-                </div>
-              <div>Quotazione</div>
+            <div className="search-and-player-cont">
+              {children}{/* searchbox */}
+              <div className="player-info">
+                <div className="player-name">{selPlayer.giocatore} <div>{selPlayer.ceduto === "1" && "*"}</div></div>
+                <div>{selPlayer.squadra}</div>
+                  <Role roleClass="auct-roles-cont" role={settings.mode === "classic" ? selPlayer.ruoloClassic : selPlayer.ruoliMantra}/>
+                  <div className="auct-quot"><span>{settings.mode === "classic" ? selPlayer.quotClass : selPlayer.quotMan}</span>
+                    <GiTwoCoins className="credits-icon" size={19}/>
+                  </div>
+                <div>Quotazione</div>
+              </div>
             </div>
+            
           </div>
           <button className="btn btn-assign btn-new" onClick={openModal}>Assegna</button>
         </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState} from "react";
+import { useEffect, useMemo, useRef, useState} from "react";
 import { useDraggable } from "react-use-draggable-scroll";
 
 import useLocalStorage from "../utility/useLocalStorage";
@@ -7,6 +7,7 @@ import PlayersImport from "../components/PlayersImport";
 import Team from "../components/Team";
 import AuctionDisplay from "../components/AuctionDisplay";
 import Modal from "../components/Modal";
+import SearchBox from "../components/SearchBox";
 
 import { MdUploadFile } from "react-icons/md";
 
@@ -157,10 +158,32 @@ const Draft = () => {
 
   const [drag, setDrag] = useState(true)
 
-
   const ref = useRef();
   const { events } = useDraggable(ref, {applyRubberBandEffect: true, isMounted: drag});
 
+
+
+
+  const [query, setQuery] = useState("");
+
+  const searchItems = useMemo(() => {
+    let quot = settings.mode === "classic" ? "quotClass" : "quotMan";
+    if (players){
+      return players.filter(item => 
+        item.giocatore.toLowerCase().includes(query.toLowerCase()))
+        .sort((a,b) => b[quot] - a[quot]) 
+    }
+  }, [players, query]) 
+
+
+  function selSearchedPlayer(playerIdx){
+    let idx = players.findIndex(player => playerIdx === player.sortId )
+    setSelPlayer(players[idx]);
+    setCurrIndex(idx);
+  }
+
+
+  const [sortingMode, setSortingMode] = useState("acquisto");
 
 
   return (
@@ -170,7 +193,8 @@ const Draft = () => {
           <MdUploadFile size={22} />
         </PlayersImport>}
       {players && selPlayer && (
-        <>
+        <div className="top-container">
+          <div className="history-cont">Cronologia Acquisti</div>
           <AuctionDisplay
             goPrev={goPrevPlayer}
             goNext={goNextPlayer}
@@ -178,9 +202,21 @@ const Draft = () => {
             selPlayer={selPlayer}
             progressIndex={currIndex}
             playersLength = {players.length}
-          />
-          
-        </>
+          >
+            <div className="search-box-cont">
+              <SearchBox searchItems={searchItems} query={query} setQuery={setQuery} changePlayer={selSearchedPlayer} mode={settings.mode}/>
+            </div>
+          </AuctionDisplay>
+          <div className="sorting-cont">
+            <div>Ordinamento</div>
+            <select name="sortSelect" id="sortSelect" defaultValue={sortingMode} onChange={(e) => setSortingMode(e.target.value)}>
+              <option value="acquisto"> Acquisto </option>
+              <option value="acquisto-reverse"> Acquisto inverso </option>
+              <option value="ruolo"> Ruolo </option>
+              <option value="ruolo-reverse"> Ruolo inverso</option>
+            </select>
+          </div>
+        </div>
       )}
       {/* Teams */}
       <div style={{ position: "relative"}} >
@@ -188,7 +224,11 @@ const Draft = () => {
           <div className="teams-wrapper">
             <div className="teams-cont " {...events} ref={ref} id="drag-scroll">
               {teams.map((team) => (
-                <Team key={team.id} team={team} teams={teams} updateTeams={(val) => setTeams(val)} remPlayer={[toRemove, setToRemove, () => modalToggleHandler("delete")]} dragscroll={[drag, setDrag]}/>
+                <Team key={team.id} team={team} teams={teams} mode={settings.mode}
+                  sortingMode={sortingMode}
+                  updateTeams={(val) => setTeams(val)} 
+                  remPlayer={[toRemove, setToRemove, () => modalToggleHandler("delete")]}
+                  dragscroll={[drag, setDrag]}/>
               ))}
             </div>
           </div>

@@ -32,8 +32,9 @@ function Modal({ onCancel, onSubmitHandler, selPlayer, mode, type }) {
       <div className="player-form-cont">
         <form id="player-form" onSubmit={submitForm} className="player-form">
           <div className="modal-info">
-              <Role roleClass="auct-roles-cont" role={mode === "classic" ? selPlayer.ruoloClassic : selPlayer.ruoliMantra}/>
-              <div className="player-name">{selPlayer.giocatore}</div>
+            <Role roleClass="auct-roles-cont" role={mode === "classic" ? selPlayer.ruoloClassic : selPlayer.ruoliMantra}/>
+            <div className="player-name">{selPlayer.giocatore}</div>
+            <div className="player-team">{selPlayer.squadra}</div>
             {/* <div className="auct-quot-cont">
               <div className="auct-quot"> <span>{mode === "classic" ? selPlayer.quotClass : selPlayer.quotMan}</span> 
                 <GiTwoCoins className="credits-icon" size={19}/>
@@ -48,7 +49,10 @@ function Modal({ onCancel, onSubmitHandler, selPlayer, mode, type }) {
                   <option key={team.id} value={team.id}>{team.name}</option>
                 ))}
               </select>
-              <input ref={inputRef} type="number" id="cost" name="cost" value={cost} autoFocus onChange={costInputHandler}/>
+              <div className="cost-cont">
+                <input ref={inputRef} type="number" id="cost" name="cost" value={cost} autoFocus onChange={costInputHandler}/>
+                <GiTwoCoins className="credits-icon" />
+              </div>
 
             </div>
           )}

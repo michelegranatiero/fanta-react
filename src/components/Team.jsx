@@ -1,10 +1,14 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import Player from "./Player";
 
 import { MdEdit } from "react-icons/md";
+import { GiTwoCoins } from "react-icons/gi";
 
-function Team({team, teams, updateTeams, remPlayer, dragscroll}) {
+import customSortingByRole from "../utility/customSortingByRole";
+
+
+function Team({team, teams, mode, sortingMode, updateTeams, remPlayer, dragscroll}) {
 
   const [clickDrag, setClickDrag] = dragscroll; /* for disabling mouse click and drag scrolling */
 
@@ -24,7 +28,10 @@ function Team({team, teams, updateTeams, remPlayer, dragscroll}) {
 
   function changeEditMode(){
     setEditOn(!editOn);
+    /* const timer = setTimeout(() => setClickDrag(!clickDrag), 1000)
+    return () => clearTimeout(timer) */
     setClickDrag(!clickDrag);
+
   }
   
   function confirmInput(){
@@ -44,7 +51,9 @@ function Team({team, teams, updateTeams, remPlayer, dragscroll}) {
         confirmInput();
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside, true);
+
   }, [inputRef])
 
 
@@ -60,15 +69,32 @@ function Team({team, teams, updateTeams, remPlayer, dragscroll}) {
 
   useLayoutEffect(() =>{
     if (firstRenderDone.current) {
-      const updatedTeam = {...team, "spentCredits": spentCredits, "resCredits": resCredits, "maxOffer": maxOffer}
+      /* sorting */
+      /* const orderedPlayers = team.players.sort((a,b) => customSortingByRole(a, b, mode)); */
+      /* credits */
+      const updatedTeam = {...team, /* "players": orderedPlayers, */"spentCredits": spentCredits, "resCredits": resCredits, "maxOffer": maxOffer}
       const newTeams = [...teams];
       newTeams[team.id - 1] = updatedTeam;
-      /* setTeams(newTeams); */
       updateTeams(newTeams);
     }else{
       firstRenderDone.current = true;
     }
   }, [team.players])
+
+
+  const sortedPlayers = useMemo(() => {
+    console.log(team.players)
+    let plrsCopy = [...team.players];
+    if (sortingMode === "ruolo") {
+      return plrsCopy.sort((a,b) => customSortingByRole(a, b, mode));
+    }else if(sortingMode === "ruolo-reverse"){
+      return plrsCopy.sort((a,b) => customSortingByRole(a, b, mode)).reverse();
+    }else if (sortingMode === "acquisto-reverse"){
+      return plrsCopy.reverse();
+    }else{  /* acquisto */
+      return plrsCopy;
+    }
+  }, [team.players, sortingMode]) 
 
 
 
@@ -85,17 +111,31 @@ function Team({team, teams, updateTeams, remPlayer, dragscroll}) {
           <div className="team-name" onDoubleClick={changeEditMode}>{team.name}</div>
         )}
 
-        <button className="btn-team-edit" ref={buttonRef} onClick={changeEditMode}><MdEdit/></button>
+        <button className="btn-team-edit" ref={buttonRef} onMouseUp={changeEditMode}><MdEdit/></button>
       </div>
-
-      <div className="credits"> Tot: {team.startingCredits}</div>
-      <div className="res-credits">Res:  {resCredits}</div>
-      <div className="max-offer">Offerta max: {maxOffer}</div>
+      
+      <div className="credits-cont">
+        <div className="credits">
+          <div className="credits-icon"><GiTwoCoins /> </div>
+          <div className="res-credits"> {resCredits} </div>
+           / 
+          <div>{team.startingCredits}</div>
+        </div> 
+        <div className="max-offer-cont">
+          <div className="max-credits-icon">
+            <div className="credits-icon"> <GiTwoCoins /> </div> 
+            <div className="max-text">max</div>
+          </div>
+          <div className="max-offer"> {maxOffer} </div> 
+        </div>
+      </div>
+      
       
       <div className="team-players">
-        {team.players.map((player, idx) => (
+        {sortedPlayers.map((player, idx) => (
           <Player key={idx} player={player} team={team} remPlayer={remPlayer}/>
-        ))}
+        ))
+        }
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ function Player({player, team, remPlayer}) {
           <Role roleClass="auct-roles-cont" role={settings.mode === "classic" ? player.ruoloClassic : player.ruoliMantra}/>
           {player.giocatore}
         </div>
-        {player.cost} 
+        <div className="player-cost">{player.cost}</div>
         <button className="btn-rem-player" onClick={modalToggleHandler}> <MdPersonRemove/> </button>
       </div>
       

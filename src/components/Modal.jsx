@@ -20,6 +20,9 @@ function Modal({ onCancel, onSubmitHandler, selPlayer, mode, type }) {
       setCost(e.target.value);
     }
   }
+  function costOnFocus(e){
+    e.target.select()
+  }
   
   function submitForm(e){
     e.preventDefault();
@@ -50,7 +53,7 @@ function Modal({ onCancel, onSubmitHandler, selPlayer, mode, type }) {
                 ))}
               </select>
               <div className="cost-cont">
-                <input ref={inputRef} type="number" id="cost" name="cost" value={cost} autoFocus onChange={costInputHandler}/>
+                <input ref={inputRef} type="number" id="cost" name="cost" value={cost} autoFocus onChange={costInputHandler} onFocus={costOnFocus}/>
                 <GiTwoCoins className="credits-icon" />
               </div>
 
@@ -70,7 +73,7 @@ function Modal({ onCancel, onSubmitHandler, selPlayer, mode, type }) {
                 Conferma
               </button>
             ):(
-              <button type="submit" className="btn btn-delete" >
+              <button type="submit" className="btn btn-delete" autoFocus>
                 Elimina
               </button>
             )}

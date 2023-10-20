@@ -79,14 +79,15 @@ const Draft = () => {
 
   /* Assegnamento Giocatore da Modal*/
   function pushPlayerValidation(teamId, cost) {
+    const teamDst = teams[teamId-1];
     /* console.log(cost<1, isNaN(cost), cost) */
     /* console.log(teamId-1, teams[teamId-1].maxOffer) */
     /* console.log("validation", teams) */
     if(cost<1 || isNaN(cost)|| cost === ""){
       alert('il costo del giocatore non può essere inferiore a 1')
-    }else if(cost > teams[teamId-1].maxOffer){
+    }else if(cost > teamDst.maxOffer){
       alert('Il costo del giocatore supera la massima offerta che la squadra selezionata può presentare')
-    }else if(teams[teamId-1].players.length >= teams[teamId-1].numPlayers){
+    }else if(teamDst.players.length >= teamDst.numPlayers){
       alert('La squadra selezionata è al completo')
     }else{
       /* if all ok */
@@ -208,7 +209,7 @@ const Draft = () => {
             </div>
           </AuctionDisplay>
           <div className="sorting-cont">
-            <div>Ordinamento</div>
+            <div className="sorting-label">Ordinamento</div>
             <select name="sortSelect" id="sortSelect" defaultValue={sortingMode} onChange={(e) => setSortingMode(e.target.value)}>
               <option value="acquisto"> Acquisto </option>
               <option value="acquisto-reverse"> Acquisto inverso </option>

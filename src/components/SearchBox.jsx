@@ -23,7 +23,7 @@ function SearchBox({searchItems, query, setQuery, changePlayer, mode}) {
   return (
     <div ref={searchRef}>
       <div className="search-div">
-        <input type="search" className="input-search-box" value={query} 
+        <input type="search" className="input-search-box" value={query} placeholder="Cerca giocatore"
           onChange={e => setQuery(e.target.value)} onClick={() => setShowResults(true)}/>
         <MdSearch className="search-icon"/>
       </div>

@@ -12,12 +12,12 @@ function Home() {
       <div className="btn-cont-home">
         {savedDraft && (
           <button className="btn btn-bigger" onClick={() => navigate("draft")}>
-            <span>Resume Draft</span>
+            <span>Riprendi Asta</span>
           </button>
         )}
         <button className="btn btn-new btn-bigger" onClick={() => navigate("new-draft")}>
           <span className="btn-icon"><MdAddCircle size={22} /></span>
-          <span className="btn-text">New Draft</span>
+          <span className="btn-text">Nuova Asta</span>
         </button>
       </div>
       {/* <div className="cards-container">

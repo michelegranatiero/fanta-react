@@ -45,6 +45,10 @@ function Team({team, teams, mode, sortingMode, updateTeams, remPlayer, dragscrol
     }
   }
 
+  function teamNameOnFocus(e){
+    e.target.select()
+  }
+
   useEffect(() => {   
     function handleClickOutside(e) {
       if (inputRef.current && !inputRef.current.contains(e.target) && !buttonRef.current.contains(e.target)){
@@ -83,7 +87,6 @@ function Team({team, teams, mode, sortingMode, updateTeams, remPlayer, dragscrol
 
 
   const sortedPlayers = useMemo(() => {
-    console.log(team.players)
     let plrsCopy = [...team.players];
     if (sortingMode === "ruolo") {
       return plrsCopy.sort((a,b) => customSortingByRole(a, b, mode));
@@ -105,7 +108,7 @@ function Team({team, teams, mode, sortingMode, updateTeams, remPlayer, dragscrol
         {editOn?(
           <>
             <input type="text" ref={inputRef} name="name" value={team.name}
-                onChange={changeTeamStuff} onKeyUp={handleKeyUp} autoFocus />
+                onChange={changeTeamStuff} onKeyUp={handleKeyUp} autoFocus onFocus={teamNameOnFocus}/>
           </>
         ):(
           <div className="team-name" onDoubleClick={changeEditMode}>{team.name}</div>

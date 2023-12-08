@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState} from "react";
 import { useDraggable } from "react-use-draggable-scroll";
 
 import useLocalStorage from "../utility/useLocalStorage";
+import playerValidation from "../utility/playerValidation";
 
 import PlayersImport from "../components/PlayersImport";
 import Team from "../components/Team";
@@ -10,6 +11,7 @@ import Modal from "../components/Modal";
 import SearchBox from "../components/SearchBox";
 
 import { MdUploadFile } from "react-icons/md";
+import { BiExport, BiImport} from "react-icons/bi"
 
 const Draft = () => {
 
@@ -78,20 +80,10 @@ const Draft = () => {
   }
 
   /* Assegnamento Giocatore da Modal*/
-  function pushPlayerValidation(teamId, cost) {
-    const teamDst = teams[teamId-1];
-    /* console.log(cost<1, isNaN(cost), cost) */
-    /* console.log(teamId-1, teams[teamId-1].maxOffer) */
-    /* console.log("validation", teams) */
-    if(cost<1 || isNaN(cost)|| cost === ""){
-      alert('il costo del giocatore non può essere inferiore a 1')
-    }else if(cost > teamDst.maxOffer){
-      alert('Il costo del giocatore supera la massima offerta che la squadra selezionata può presentare')
-    }else if(teamDst.players.length >= teamDst.numPlayers){
-      alert('La squadra selezionata è al completo')
-    }else{
+  function pushPlayerValidation(teamId, cost, player = selPlayer) {
+    if(playerValidation(player, teamId, cost, teams, settings)){
       /* if all ok */
-      pushPlayerIntoTeam(teamId, cost)
+      pushPlayerIntoTeam(player, teamId, cost)
     }
   }
 
@@ -100,15 +92,15 @@ const Draft = () => {
   }, [teams[0].maxOffer])
  */
 
-  function pushPlayerIntoTeam(teamId, cost){
-    const newPlayer = {...selPlayer, "cost" : cost};
+  function pushPlayerIntoTeam(player, teamId, cost){
+    const newPlayer = {...player, "cost" : cost};
     const idx = teamId - 1;
     const oldTeamPlayers = teams[idx].players;
     /* slice for UPDATING */
     const newTeams = [...teams.slice(0, idx), {...teams[idx], "players": [...oldTeamPlayers, newPlayer]}, ...teams.slice(idx + 1)]
     setTeams(newTeams);
     /* remove player from players list*/
-    removePlayerFromAuction(selPlayer.id)
+    removePlayerFromAuction(player.id)
     /* eventually add player to history */
     modalToggleHandler("assign");
   }
@@ -187,6 +179,38 @@ const Draft = () => {
   const [sortingMode, setSortingMode] = useState("acquisto");
 
 
+
+  async function downloadRose(){
+
+    const genData = () => {
+      let data = ""
+      teams.forEach((team) => {
+        if (team.players.length > 0){
+          data += "$,$,$\n"
+          team.players.forEach(pl =>{
+            data += `${team.name},${pl.id},${pl.cost}\n`
+          })
+        }
+      })
+      return data;
+    }
+
+    const blob = new Blob([genData()], { type: "text/csv" });
+    const fileName = "rosters-" + new Date().toLocaleDateString() + ".csv";
+    
+
+    const anchorTag = document.createElement("a");
+    anchorTag.href = URL.createObjectURL(blob);
+    anchorTag.download = fileName;
+    anchorTag.style.display = "none";
+    anchorTag.click();
+  }
+
+  /* function importRose(){
+
+  } */
+
+
   return (
     <>
       {!players && <PlayersImport updatePlayers={updatePlayersList} >
@@ -195,27 +219,44 @@ const Draft = () => {
         </PlayersImport>}
       {players && selPlayer && (
         <div className="top-container">
-          <div className="history-cont">Cronologia Acquisti</div>
+          <div className="history-cont">
+            Cronologia Acquisti
+          </div>
           <AuctionDisplay
             goPrev={goPrevPlayer}
             goNext={goNextPlayer}
             openModal={() => modalToggleHandler("assign")}
             selPlayer={selPlayer}
             progressIndex={currIndex}
-            playersLength = {players.length}
+            playersLength={players.length}
           >
             <div className="search-box-cont">
               <SearchBox searchItems={searchItems} query={query} setQuery={setQuery} changePlayer={selSearchedPlayer} mode={settings.mode}/>
             </div>
           </AuctionDisplay>
-          <div className="sorting-cont">
-            <div className="sorting-label">Ordinamento</div>
-            <select name="sortSelect" id="sortSelect" defaultValue={sortingMode} onChange={(e) => setSortingMode(e.target.value)}>
-              <option value="acquisto"> Acquisto </option>
-              <option value="acquisto-reverse"> Acquisto inverso </option>
-              <option value="ruolo"> Ruolo </option>
-              <option value="ruolo-reverse"> Ruolo inverso</option>
-            </select>
+          <div className="tools-cont">
+            <div>
+              <button className="btn btn-export" onClick={downloadRose}>
+                <span>Esporta Rose</span>
+                <BiExport className="btn-icon"/>
+              </button>
+            </div>
+            {/* <div>
+              <button className="btn" onClick={importRose}>
+                <span>Importa Rose</span>
+                <BiImport/>
+              </button>
+            </div> */}
+            <div className="sorting-cont">
+              <div className="sorting-label">Ordinamento</div>
+              <select name="sortSelect" id="sortSelect" defaultValue={sortingMode} onChange={(e) => setSortingMode(e.target.value)}>
+                <option value="acquisto"> Acquisto </option>
+                <option value="acquisto-reverse"> Acquisto inverso </option>
+                <option value="ruolo"> Ruolo </option>
+                <option value="ruolo-reverse"> Ruolo inverso</option>
+              </select>
+            </div>
+            
           </div>
         </div>
       )}

@@ -10,6 +10,8 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
     "https://content.fantacalcio.it/web/campioncini/card2021/NO-CAMPIONCINO.png?v=35";
 
   const [settings, setSettings] = useLocalStorage("settings", null);
+  
+  const [players, setPlayers] = useLocalStorage("players", null)
 
   const config = {
     delta: 50,                             // min distance(px) before a swipe starts. *See Notes*
@@ -29,6 +31,13 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
   });
 
 
+  
+  /* const playersImages = players.map( (pl) => {
+    let img = new Image();
+    img.src = pl.urlCampioncino;
+    return img
+  }); */
+
 
 
   return (
@@ -41,15 +50,33 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
             <div>
               {/* <div>{selPlayer.sortId + 1}</div> */} {/* useful for debugging */}
               <div>{progressIndex+1}/{playersLength}</div>
-              <img
-                src= {selPlayer.urlCampioncino}
+              <div className="image-slider">
+                <div className="camp-cont">
+                  {players.map(pl => (
+                    <img
+                      key={pl.id}
+                      src= {pl.urlCampioncino}
+                      loading="lazy"
+                      alt="Campioncino"
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src=noCampUrl;
+                      }}
+                      className="campioncino"
+                      style={{translate: `${-150 * progressIndex -25}%`}}
+                    />
+                  ))}
+                </div>
+              </div>
+              {/* <img
+                src= {playersImages[progressIndex].src}
                 alt="Campioncino"
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
                   currentTarget.src=noCampUrl;
                 }}
                 className="campioncino"
-              />
+              /> */}
             </div>
             <div className="search-and-player-cont">
               {children}{/* searchbox */}

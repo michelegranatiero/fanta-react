@@ -1,6 +1,6 @@
 # Fantagment
 
-An Auction Manager for Fantasy Football. This is a responsive website that exploits the browser local storage.
+An Auction Manager for Fantasy Football. This is a responsive website built with the React framework that exploits the browser local storage.
 
 2 modes are available: Classic and Mantra.
 

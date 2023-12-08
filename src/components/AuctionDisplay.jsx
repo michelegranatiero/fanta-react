@@ -5,13 +5,13 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 import { useSwipeable } from "react-swipeable";
 
-function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, playersLength, children}) {
+function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, players, children}) {
   const noCampUrl =
     "https://content.fantacalcio.it/web/campioncini/card2021/NO-CAMPIONCINO.png?v=35";
 
   const [settings, setSettings] = useLocalStorage("settings", null);
   
-  const [players, setPlayers] = useLocalStorage("players", null)
+  // const [players, setPlayers] = useLocalStorage("players", null)
 
   const config = {
     delta: 50,                             // min distance(px) before a swipe starts. *See Notes*
@@ -49,7 +49,7 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
           <div className="player-cont">
             <div>
               {/* <div>{selPlayer.sortId + 1}</div> */} {/* useful for debugging */}
-              <div>{progressIndex+1}/{playersLength}</div>
+              <div>{progressIndex+1}/{players.length}</div>
               <div className="image-slider">
                 <div className="camp-cont">
                   {players.map(pl => (
@@ -63,6 +63,7 @@ function AuctionDisplay({goPrev, goNext, openModal, selPlayer, progressIndex, pl
                         currentTarget.src=noCampUrl;
                       }}
                       className="campioncino"
+                      /* translation */
                       style={{translate: `${-150 * progressIndex -25}%`}}
                     />
                   ))}

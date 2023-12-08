@@ -228,7 +228,7 @@ const Draft = () => {
             openModal={() => modalToggleHandler("assign")}
             selPlayer={selPlayer}
             progressIndex={currIndex}
-            playersLength={players.length}
+            players={players}
           >
             <div className="search-box-cont">
               <SearchBox searchItems={searchItems} query={query} setQuery={setQuery} changePlayer={selSearchedPlayer} mode={settings.mode}/>

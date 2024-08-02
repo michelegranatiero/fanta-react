@@ -264,7 +264,7 @@ const Draft = () => {
       <div style={{ position: "relative"}} >
 
           <div className="teams-wrapper">
-            <div className="teams-cont " {...events} ref={ref} id="drag-scroll">
+            <div className="teams-cont" {...events} ref={ref} id="drag-scroll">
               {teams.map((team) => (
                 <Team key={team.id} team={team} teams={teams} mode={settings.mode}
                   sortingMode={sortingMode}

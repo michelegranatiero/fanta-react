@@ -176,6 +176,7 @@ input:focus{
   background-color: var(--violet);
   color: white;
   border-color: var(--dark-blue);
+  user-select: none;
 
   box-shadow:
   6px 6px 18px var(--dark-blue),
@@ -678,6 +679,7 @@ font-size: var(--fs-btn-sec);
   /* box-shadow:
   6px 6px 18px #222a48,
   -6px -6px 18px #7a91ef; */
+  user-select: none;
   
 }
 
@@ -825,6 +827,9 @@ font-size: var(--fs-btn-sec);
   position: relative;
   overflow: hidden;
 }
+.team{
+  user-select: none;
+}
 
 .team .team-name {
   font-weight: bold;
@@ -832,10 +837,12 @@ font-size: var(--fs-btn-sec);
   overflow: auto;
   /* overflow-wrap: break-word; */
   cursor: pointer;
+  width: 100%;
 }
 
 .team input {
   font-size: var(--fs-primary);
+  width: 100%;
   padding: 0 4px;
   border-radius: 5px;
   border: 2px solid var(--orange);
@@ -872,6 +879,9 @@ font-size: var(--fs-btn-sec);
 }
 
 .btn-team-edit:hover{
+  border-color: var(--orange);
+}
+.btn-team-edit:active{
   border-color: var(--orange);
 }
 
@@ -992,6 +1002,7 @@ font-size: var(--fs-btn-sec);
   height: 20px;
   font-size: var(--fs-small);
   border: 1px solid white;
+  user-select: none;
 }
 
 .btn-rem-player{
